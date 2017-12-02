@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>GifTastic</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+</head>
+
+<body>
+  <section class="app">
+    <div class="container">
+      <div class="col-lg-12 col-mg-12" id="buttons">
+      </div>
+      <div class="row">
+        <div class="col-lg-9 col-md-9" id="results-container">
+          <div id="results"></div>
+          <div class="pagination">
+            <button class="btn btn-default" id="previous">Previous</button>
+            <button class="btn btn-default" id="next">Next</button>
+          </div>
+        </div>
+        <div class="col-lg-2 col-md-2">
+
+          <form id="user-input-form">
+            Play / Pause All
+            <br />
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+            <div clsss="form-input">
+              <div class="form-group">
+                <label>
+                  Add a search term
+                  <br />
+                  <input id="user-input" />
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" id="sticker" /> Sticker
+                </label>
+              </div>
+              <div class="form-group">
+                <div class="checkbox">
+                  <label>
+                    <input type="radio" id="sticker" /> G
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="radio" id="sticker" /> PG
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="radio" id="sticker" /> PG-13
+                  </label>
+                </div>
+                <div class="checkbox">
+                  <label>
+                    <input type="radio" id="sticker" /> R
+                  </label>
+                </div>
+              </div>
+              <button class="btn btn-default" type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>
+
+<script type="text/javascript" src="app.js"></script>
+
+</html>
