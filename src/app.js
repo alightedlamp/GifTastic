@@ -1,31 +1,47 @@
 import $ from 'jquery';
 
 $(document).ready(function() {
+  // Default topics to display
   const topics = [
     'creative coding',
     'processing',
     'animation',
     'geometry',
-    '3d animation'
+    '3d animation',
+    'art'
   ];
   const API_KEY = 'dxnqgDHxhaOtCCP8Y99crUdxaxQbpYX4';
   const BASE_URL = 'http://api.giphy.com/v1';
 
-  const displayResults = function displayResults(searchTerm) {
-    // Check if rating
-    // Check if limit
-    // Check if sticker - if so, adjust url
+  // Default config
+  const config = {
+    searchTerm: topics[Math.floor(Math.random() * topics.length)], // Set init search to random results
+    animate: false,
+    sticker: false
+  };
+
+  const displayResults = function displayResults() {
     const params = {
-      q: searchTerm,
+      q: config.searchTerm,
       limit: 10,
       api_key: API_KEY
     };
-    const url = BASE_URL + '/gifs/search?' + $.param(params);
+
+    // Check config for current type selection and build URL accordingly
+    let url;
+    if (config.sticker) {
+      url = BASE_URL + '/stickers/search?' + $.param(params);
+    } else {
+      url = BASE_URL + '/gifs/search?' + $.param(params);
+    }
 
     $.get(url).done(response => {
-      console.log(response);
       $('#results').empty();
 
+      // Display the total number of results
+      $('#stats').text(`Total results: ${response.pagination.total_count}`);
+
+      // Iterate through response data and display gifs on page
       response.data.map(gif => {
         $('#results').append(`
         <div class="gif-container">
@@ -52,11 +68,12 @@ $(document).ready(function() {
 
   $('#buttons').on('click', 'button', function(e) {
     e.preventDefault();
-    // Hit the API
-    const searchTerm = $(this).text();
-    displayResults(searchTerm);
+    // Update global search term on button click
+    config.searchTerm = $(this).text();
+    displayResults();
   });
 
+  // Toggle an individual gifs animate data attribute
   $('#results').on('click', 'img.gif', function() {
     let state = $(this).attr('data-state');
 
@@ -69,17 +86,44 @@ $(document).ready(function() {
     }
   });
 
+  // Handle user input
   $('#user-input-form').on('submit', function(e) {
     e.preventDefault();
-    topics.push(
-      $('#user-input')
-        .val()
-        .trim()
-    );
+    const inputVal = $('#user-input')
+      .val()
+      .trim();
+
+    // Validate user input and do not allow empty submissions
+    if (inputVal) {
+      topics.push(inputVal);
+    } else {
+      console.log('Input was blank!');
+    }
     $('#user-input').val('');
     renderButtons();
   });
 
+  const toggleAnimated = function toggleAnimated() {
+    // Change checked value
+    config.animate = !config.animate;
+    // Adjust all elements in #results
+    if (config.animate) {
+      $('.gif').attr('data-state', 'animate');
+      $('.gif').attr('src', $(this).attr('data-animate'));
+    } else {
+      $('.gif').attr('data-state', 'still');
+      $('.gif').attr('src', $(this).attr('data-still'));
+    }
+  };
+  const toggleType = function toggleType() {
+    // Change checked value
+    config.sticker = !config.sticker;
+    // Re-render results
+    displayResults();
+  };
+  $('#animated-switch').click(toggleAnimated);
+  $('#type-switch').click(toggleType);
+
   renderButtons();
-  displayResults(topics[0]);
+  displayResults(config.searchTerm);
 });

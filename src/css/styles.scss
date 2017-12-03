@@ -1,13 +1,46 @@
-// @import 'reset.css';
+@import 'reset.css';
+
+* {
+  box-sizing: border-box;
+}
 
 html,
 body {
+  color: rgb(228, 228, 228);
+  background: rgb(19, 19, 19);
+  font-family: sans-serif;
+}
+h1 {
+  font-size: 2em;
 }
 
 .app {
-  // margin: 2em;
-  color: rgb(228, 228, 228);
-  background: rgb(19, 19, 19);
+  padding: 2em;
+  width: 960px;
+  margin: 0 auto;
+}
+#app-content {
+  display: flex;
+}
+#results-container,
+#controls {
+  padding: 1em;
+}
+#state-options,
+#state-option {
+  display: flex;
+}
+#state-options {
+  justify-content: space-between;
+}
+#results-container {
+  width: 760px;
+}
+#controls {
+  width: 200px;
+}
+#buttons {
+  margin: 20px 0;
 }
 
 #results {
@@ -17,6 +50,9 @@ body {
 }
 .gif-container {
   margin: 10px;
+  img {
+    cursor: pointer;
+  }
 }
 
 .switch {
@@ -69,4 +105,17 @@ input:checked + .slider:before {
 }
 .slider.round:before {
   border-radius: 50%;
+}
+.btn {
+  border: 0;
+  border-radius: 0;
+  padding: 10px;
+  font-size: 1.1em;
+  background: red;
+
+  transition: 0.2s;
+
+  &:hover {
+    background: lighten(red, 20%);
+  }
 }
