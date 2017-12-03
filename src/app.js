@@ -43,14 +43,25 @@ $(document).ready(function() {
 
       // Iterate through response data and display gifs on page
       response.data.map(gif => {
+        // Pick src image based on current animate config setting and set state accordingly
+        let gifSrc;
+        let gifState;
+        if (config.animate) {
+          gifSrc = gif.images.fixed_height.url;
+          gifState = 'animate';
+        } else {
+          gifSrc = gif.images.fixed_height_still.url;
+          gifState = 'still';
+        }
+
         $('#results').append(`
         <div class="gif-container">
           <p>Rating: ${gif.rating.toUpperCase()}</p>
           <img
             class="gif"
-            src="${gif.images.fixed_height_still.url}"
+            src="${gifSrc}"
             alt="${gif.title}"
-            data-state="still"
+            data-state="${gifState}"
             data-animate="${gif.images.fixed_height.url}" 
             data-still="${gif.images.fixed_height_still.url}"
           />
@@ -108,11 +119,15 @@ $(document).ready(function() {
     config.animate = !config.animate;
     // Adjust all elements in #results
     if (config.animate) {
-      $('.gif').attr('data-state', 'animate');
-      $('.gif').attr('src', $(this).attr('data-animate'));
+      $('.gif').each(function() {
+        $(this).attr('data-state', 'animate');
+        $(this).attr('src', $(this).attr('data-animate'));
+      });
     } else {
-      $('.gif').attr('data-state', 'still');
-      $('.gif').attr('src', $(this).attr('data-still'));
+      $('.gif').each(function() {
+        $(this).attr('data-state', 'still');
+        $(this).attr('src', $(this).attr('data-still'));
+      });
     }
   };
   const toggleType = function toggleType() {
