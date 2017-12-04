@@ -12,10 +12,21 @@
     <header>
       <h1>GifTastic</h1>
     </header>
+    <div id="controls">
+      <form id="user-input-form">
+        <div class="form-group">
+          <label>
+            <input id="user-input" placeholder="Add tag" />
+          </label>
+        </div>
+        <button class="btn" type="submit">Submit</button>
+      </form>
+    </div>
     <div id="buttons">
     </div>
     <section id="app-content">
       <div id="results-container">
+        <div id="subheading"></div>
         <div id="state-options">
           <div class="state-option">
             Play / Pause All
@@ -34,26 +45,11 @@
             </div>
           </div>
         </div>
-        <div id="stats"></div>
         <div id="results"></div>
         <div class="pagination">
-          <button class="btn" id="previous">Previous</button>
+          <button class="btn" id="previous" disabled>Previous</button>
           <button class="btn" id="next">Next</button>
         </div>
-      </div>
-      <div id="controls">
-        <form id="user-input-form">
-          <div clsss="form-input">
-            <div class="form-group">
-              <label>
-                Add a search term
-                <br />
-                <input id="user-input" />
-              </label>
-            </div>
-            <button class="btn" type="submit">Submit</button>
-          </div>
-        </form>
       </div>
     </section>
   </section>

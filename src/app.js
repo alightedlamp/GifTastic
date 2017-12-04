@@ -8,6 +8,7 @@ $(document).ready(function() {
     'animation',
     'geometry',
     '3d animation',
+    'threejs',
     'art'
   ];
   const API_KEY = 'dxnqgDHxhaOtCCP8Y99crUdxaxQbpYX4';
@@ -17,13 +18,16 @@ $(document).ready(function() {
   const config = {
     searchTerm: topics[Math.floor(Math.random() * topics.length)], // Set init search to random results
     animate: false,
-    sticker: false
+    sticker: false,
+    offset: 0,
+    limit: 10
   };
 
   const displayResults = function displayResults() {
     const params = {
       q: config.searchTerm,
       limit: 10,
+      offset: config.offset,
       api_key: API_KEY
     };
 
@@ -39,7 +43,11 @@ $(document).ready(function() {
       $('#results').empty();
 
       // Display the total number of results
-      $('#stats').text(`Total results: ${response.pagination.total_count}`);
+      $('#subheading').html(
+        `<h2>${config.searchTerm} <span class="results-count">${
+          response.pagination.total_count
+        } results</span>`
+      );
 
       // Iterate through response data and display gifs on page
       response.data.map(gif => {
@@ -71,16 +79,12 @@ $(document).ready(function() {
     });
   };
 
-  const renderButtons = function renderButtons() {
-    $('#buttons').html(
-      topics.map(topic => `<button class="btn btn-default">${topic}</button>`)
-    );
-  };
-
   $('#buttons').on('click', 'button', function(e) {
     e.preventDefault();
     // Update global search term on button click
     config.searchTerm = $(this).text();
+    // Reset pagination value
+    config.offset = 0;
     displayResults();
   });
 
@@ -96,6 +100,12 @@ $(document).ready(function() {
       $(this).attr('src', $(this).attr('data-still'));
     }
   });
+
+  const renderButtons = function renderButtons() {
+    $('#buttons').html(
+      topics.map(topic => `<button class="btn btn-search">${topic}</button>`)
+    );
+  };
 
   // Handle user input
   $('#user-input-form').on('submit', function(e) {
@@ -139,6 +149,22 @@ $(document).ready(function() {
   $('#animated-switch').click(toggleAnimated);
   $('#type-switch').click(toggleType);
 
+  // Handle pagination
+  $('#next').click(function() {
+    config.offset += config.limit;
+    if (config.offset > 0) {
+      $('#previous').prop('disabled', false);
+    }
+    displayResults();
+  });
+  $('#previous').click(function() {
+    config.offset -= config.limit;
+    if (config.offset === 0) {
+      $(this).prop('disabled', true);
+    }
+    displayResults();
+  });
+
   renderButtons();
-  displayResults(config.searchTerm);
+  displayResults();
 });
