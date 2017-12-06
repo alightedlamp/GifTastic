@@ -25,7 +25,7 @@ $(document).ready(function() {
     animate: false,
     sticker: false,
     offset: 0,
-    limit: 10,
+    limit: 15,
     topics: topics
   };
 
@@ -40,7 +40,7 @@ $(document).ready(function() {
   const displayResults = function displayResults() {
     const params = {
       q: config.searchTerm,
-      limit: 10,
+      limit: config.limit,
       offset: config.offset,
       api_key: API_KEY
     };
@@ -178,10 +178,16 @@ $(document).ready(function() {
         $(this).attr('src', $(this).attr('data-still'));
       });
     }
+    // Swap the active tab
+    $('#animated-switch div:nth-child(1)').toggleClass('active');
+    $('#animated-switch div:nth-child(2)').toggleClass('active');
   };
   const toggleType = function toggleType() {
     // Change checked value
     config.sticker = !config.sticker;
+    // Swap the tabs
+    $('#type-switch div:nth-child(1)').toggleClass('active');
+    $('#type-switch div:nth-child(2)').toggleClass('active');
     // Re-render results
     displayResults();
   };

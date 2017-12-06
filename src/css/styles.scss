@@ -1,5 +1,7 @@
 @import 'reset.css';
 
+$green: rgb(0, 255, 153);
+$red: rgb(255, 102, 102);
 * {
   box-sizing: border-box;
 }
@@ -63,7 +65,8 @@ h2 {
     width: 100px;
     padding: 15px;
     &.active {
-      background-color: green;
+      color: black;
+      background-color: $green;
     }
   }
 }
@@ -74,12 +77,14 @@ h2 {
   }
   div:nth-child(1) {
     &.active {
-      background: green;
+      color: black;
+      background: $green;
     }
   }
   div:nth-child(2) {
     &.active {
-      background: red;
+      color: black;
+      background: $red;
     }
   }
 }
@@ -101,6 +106,8 @@ h2 {
   }
   .rating {
     font-size: 0.9em;
+    font-weight: bold;
+    color: rgb(189, 189, 189);
   }
 }
 #user-input-form {
@@ -130,14 +137,20 @@ h2 {
   border: 0;
   border-radius: 0;
   padding: 10px;
-  font-size: 1.1em;
-  background: red;
+  font-size: 0.9em;
+  font-weight: bold;
+  background: $red;
   cursor: pointer;
 
   transition: 0.2s;
 
+  &:disabled {
+    background: rgb(53, 53, 53);
+    color: rgb(95, 95, 95);
+  }
+
   &:hover {
-    background: lighten(red, 20%);
+    background: lighten($red, 20%);
     color: rgb(58, 58, 58);
   }
 }
@@ -164,5 +177,11 @@ h2 {
   }
 }
 .pagination {
-  margin: 20px 0;
+  margin: 20px 0 50px 0;
+}
+
+@for $i from 1 through 20 {
+  #buttons .btn:nth-child(#{$i}):hover {
+    background: hsl($i * 7, 100, 50);
+  }
 }
