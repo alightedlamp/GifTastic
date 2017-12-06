@@ -11,6 +11,8 @@ $(document).ready(function() {
     'geometry',
     '3d animation',
     'threejs',
+    'optical illusion',
+    'magic eye',
     'art'
   ];
 
@@ -26,6 +28,8 @@ $(document).ready(function() {
     limit: 10,
     topics: topics
   };
+
+  // Check if there are topics in localStorage, and if not, add the above array
   if (localStorage.getItem('topics') === null) {
     localStorage.setItem('topics', JSON.stringify(topics));
     config.topics = topics;
@@ -73,17 +77,17 @@ $(document).ready(function() {
         }
 
         $('#results').append(`
-        <div class="gif-container">
-          <img
-            class="gif"
-            src="${gifSrc}"
-            alt="${gif.title}"
-            data-state="${gifState}"
-            data-animate="${gif.images.fixed_height.url}" 
-            data-still="${gif.images.fixed_height_still.url}"
-          />
-          <p class="rating"><strong>Rating: ${gif.rating.toUpperCase()}</strong></p>
-        </div>
+          <div class="gif-container">
+            <img
+              class="gif"
+              src="${gifSrc}"
+              alt="${gif.title}"
+              data-state="${gifState}"
+              data-animate="${gif.images.fixed_height.url}" 
+              data-still="${gif.images.fixed_height_still.url}"
+            />
+            <p class="rating"><strong>Rating: ${gif.rating.toUpperCase()}</strong></p>
+          </div>
       `);
       });
     });
@@ -133,7 +137,7 @@ $(document).ready(function() {
       config.topics.map(
         topic =>
           `<div class="btn btn-search">
-            <span class="remove-topic">x</span>
+            <span class="remove-topic"><i class="fa fa-times" aria-hidden="true"></i></span>
             <span class="topic-text">${topic}</span>
           </div>`
       )
