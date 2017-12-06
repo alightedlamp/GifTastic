@@ -5,12 +5,15 @@ $(document).ready(function() {
   const topics = [
     'creative coding',
     'processing',
+    'datamoshing',
+    'glitch art',
     'animation',
     'geometry',
     '3d animation',
     'threejs',
     'art'
   ];
+
   const API_KEY = 'dxnqgDHxhaOtCCP8Y99crUdxaxQbpYX4';
   const BASE_URL = 'http://api.giphy.com/v1';
 
@@ -20,8 +23,15 @@ $(document).ready(function() {
     animate: false,
     sticker: false,
     offset: 0,
-    limit: 10
+    limit: 10,
+    topics: topics
   };
+  if (localStorage.getItem('topics') === null) {
+    localStorage.setItem('topics', JSON.stringify(topics));
+    config.topics = topics;
+  } else {
+    config.topics = JSON.parse(localStorage.getItem('topics'));
+  }
 
   const displayResults = function displayResults() {
     const params = {
@@ -64,7 +74,6 @@ $(document).ready(function() {
 
         $('#results').append(`
         <div class="gif-container">
-          <p>Rating: ${gif.rating.toUpperCase()}</p>
           <img
             class="gif"
             src="${gifSrc}"
@@ -73,19 +82,37 @@ $(document).ready(function() {
             data-animate="${gif.images.fixed_height.url}" 
             data-still="${gif.images.fixed_height_still.url}"
           />
+          <p class="rating"><strong>Rating: ${gif.rating.toUpperCase()}</strong></p>
         </div>
       `);
       });
     });
   };
 
-  $('#buttons').on('click', 'button', function(e) {
+  $('#buttons').on('click', 'span.topic-text', function(e) {
     e.preventDefault();
     // Update global search term on button click
     config.searchTerm = $(this).text();
     // Reset pagination value
     config.offset = 0;
     displayResults();
+  });
+  $('#buttons').on('click', 'span.remove-topic', function() {
+    // Get the button text
+    const topic = $(this)
+      .parent()
+      .find('span:eq(1)')
+      .text()
+      .trim();
+    // Remove from topics and localstorage
+    config.topics.splice(config.topics.indexOf(topic), 1);
+    // Update in localStorage
+    localStorage.setItem('topics', JSON.stringify(config.topics));
+
+    // Remove from DOM
+    $(this)
+      .parent()
+      .remove();
   });
 
   // Toggle an individual gifs animate data attribute
@@ -103,7 +130,13 @@ $(document).ready(function() {
 
   const renderButtons = function renderButtons() {
     $('#buttons').html(
-      topics.map(topic => `<button class="btn btn-search">${topic}</button>`)
+      config.topics.map(
+        topic =>
+          `<div class="btn btn-search">
+            <span class="remove-topic">x</span>
+            <span class="topic-text">${topic}</span>
+          </div>`
+      )
     );
   };
 
@@ -117,6 +150,8 @@ $(document).ready(function() {
     // Validate user input and do not allow empty submissions
     if (inputVal) {
       topics.push(inputVal);
+      localStorage.setItem('topics', JSON.stringify(topics));
+      config.topics = JSON.parse(localStorage.getItem('topics'));
     } else {
       console.log('Input was blank!');
     }
