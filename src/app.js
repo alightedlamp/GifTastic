@@ -17,7 +17,7 @@ $(document).ready(function() {
   ];
 
   const API_KEY = 'dxnqgDHxhaOtCCP8Y99crUdxaxQbpYX4';
-  const BASE_URL = 'http://api.giphy.com/v1';
+  const BASE_URL = 'https://api.giphy.com/v1';
 
   // Default config
   const config = {
