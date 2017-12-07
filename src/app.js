@@ -47,10 +47,13 @@ $(document).ready(function() {
 
     // Check config for current type selection and build URL accordingly
     let url;
+    let resultsType;
     if (config.sticker) {
       url = BASE_URL + '/stickers/search?' + $.param(params);
+      resultsType = 'Stickers';
     } else {
       url = BASE_URL + '/gifs/search?' + $.param(params);
+      resultsType = 'GIFs';
     }
 
     $.get(url).done(response => {
@@ -58,9 +61,10 @@ $(document).ready(function() {
 
       // Display the total number of results
       $('#subheading').html(
-        `<h2>${config.searchTerm} <span class="results-count">${
-          response.pagination.total_count
-        } results</span>`
+        `<h2>${config.searchTerm} <span class="results-count">
+        ${response.pagination.total_count
+          .toString()
+          .replace(/(.)(?=(\d{3})+$)/g, '$1,')} ${resultsType}</span>`
       );
 
       // Iterate through response data and display gifs on page
@@ -99,6 +103,7 @@ $(document).ready(function() {
     config.searchTerm = $(this).text();
     // Reset pagination value
     config.offset = 0;
+    $('#previous').prop('disabled', true);
     displayResults();
   });
   $('#buttons').on('click', 'span.remove-topic', function() {
