@@ -187,6 +187,7 @@ h2 {
   margin: 20px 0 50px 0;
 }
 
+// Increment button hover background colors for some flar
 @for $i from 1 through 20 {
   #buttons .btn:nth-child(#{$i}):hover {
     background: hsl($i * 7, 100, 50);

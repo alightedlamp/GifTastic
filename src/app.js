@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 $(document).ready(function() {
-  // Default topics to display
+  // Default topics to display if there are no items in localStorage
   const topics = [
     'creative coding',
     'processing',
@@ -29,7 +29,7 @@ $(document).ready(function() {
     topics: topics
   };
 
-  // Check if there are topics in localStorage, and if not, add the above array
+  // Check if there are topics in localStorage, and if not, add the contents of the topics array
   if (localStorage.getItem('topics') === null) {
     localStorage.setItem('topics', JSON.stringify(topics));
     config.topics = topics;
@@ -37,6 +37,7 @@ $(document).ready(function() {
     config.topics = JSON.parse(localStorage.getItem('topics'));
   }
 
+  // Display gifs based on current config
   const displayResults = function displayResults() {
     const params = {
       q: config.searchTerm,
@@ -56,47 +57,59 @@ $(document).ready(function() {
       resultsType = 'GIFs';
     }
 
-    $.get(url).done(response => {
-      $('#results').empty();
+    $.get(url)
+      .done(response => {
+        // Reset the results div
+        $('#results').empty();
 
-      // Display the total number of results
-      $('#subheading').html(
-        `<h2>${config.searchTerm} <span class="results-count">
+        // Display the search term as a heading and the total number of results
+        $('#subheading').html(
+          `<h2>${config.searchTerm} <span class="results-count">
         ${response.pagination.total_count
           .toString()
-          .replace(/(.)(?=(\d{3})+$)/g, '$1,')} ${resultsType}</span>`
-      );
+          .replace(/(.)(?=(\d{3})+$)/g, '$1,')} ${resultsType}</span>` // Adds thousandths commas
+        );
 
-      // Iterate through response data and display gifs on page
-      response.data.map(gif => {
-        // Pick src image based on current animate config setting and set state accordingly
-        let gifSrc;
-        let gifState;
-        if (config.animate) {
-          gifSrc = gif.images.fixed_height.url;
-          gifState = 'animate';
-        } else {
-          gifSrc = gif.images.fixed_height_still.url;
-          gifState = 'still';
-        }
+        // Iterate through response data and display gifs on page
+        response.data.map(gif => {
+          // Pick src image based on current animate config setting and set state accordingly
+          let gifSrc;
+          let gifState;
+          if (config.animate) {
+            gifSrc = gif.images.fixed_height.url;
+            gifState = 'animate';
+          } else {
+            gifSrc = gif.images.fixed_height_still.url;
+            gifState = 'still';
+          }
 
+          // Append gif div with image and rating
+          $('#results').append(`
+            <div class="gif-container">
+              <img
+                class="gif"
+                src="${gifSrc}"
+                alt="${gif.title}"
+                data-state="${gifState}"
+                data-animate="${gif.images.fixed_height.url}" 
+                data-still="${gif.images.fixed_height_still.url}"
+              />
+              <p class="rating"><strong>Rating: ${gif.rating.toUpperCase()}</strong></p>
+            </div>
+          `);
+        });
+      })
+      .error(function(err) {
         $('#results').append(`
-          <div class="gif-container">
-            <img
-              class="gif"
-              src="${gifSrc}"
-              alt="${gif.title}"
-              data-state="${gifState}"
-              data-animate="${gif.images.fixed_height.url}" 
-              data-still="${gif.images.fixed_height_still.url}"
-            />
-            <p class="rating"><strong>Rating: ${gif.rating.toUpperCase()}</strong></p>
+          <div>
+            <p>There was an error in the application!</p>
+            <p>${err}</p>
           </div>
       `);
       });
-    });
   };
 
+  // Handle when user selects a new topic to display
   $('#buttons').on('click', 'span.topic-text', function(e) {
     e.preventDefault();
     // Update global search term on button click
@@ -106,6 +119,8 @@ $(document).ready(function() {
     $('#previous').prop('disabled', true);
     displayResults();
   });
+
+  // Handle when user removes a topic from button list
   $('#buttons').on('click', 'span.remove-topic', function() {
     // Get the button text
     const topic = $(this)
@@ -124,7 +139,7 @@ $(document).ready(function() {
       .remove();
   });
 
-  // Toggle an individual gifs animate data attribute
+  // Toggle an individual gifs animate state on click
   $('#results').on('click', 'img.gif', function() {
     let state = $(this).attr('data-state');
 
@@ -137,6 +152,7 @@ $(document).ready(function() {
     }
   });
 
+  // Renders buttons based on the current config's topics
   const renderButtons = function renderButtons() {
     $('#buttons').html(
       config.topics.map(
@@ -149,7 +165,7 @@ $(document).ready(function() {
     );
   };
 
-  // Handle user input
+  // Handle adding a new user selection to the page
   $('#user-input-form').on('submit', function(e) {
     e.preventDefault();
     const inputVal = $('#user-input')
@@ -157,6 +173,7 @@ $(document).ready(function() {
       .trim();
 
     // Validate user input and do not allow empty submissions
+    // TODO: Make this actually validate the input more rigorously
     if (inputVal) {
       topics.push(inputVal);
       localStorage.setItem('topics', JSON.stringify(topics));
@@ -168,6 +185,7 @@ $(document).ready(function() {
     renderButtons();
   });
 
+  // Toggle the global aniimation state
   const toggleAnimated = function toggleAnimated() {
     // Change checked value
     config.animate = !config.animate;
@@ -187,15 +205,19 @@ $(document).ready(function() {
     $('#animated-switch div:nth-child(1)').toggleClass('active');
     $('#animated-switch div:nth-child(2)').toggleClass('active');
   };
+
+  // Toggle the global result type state
   const toggleType = function toggleType() {
     // Change checked value
     config.sticker = !config.sticker;
-    // Swap the tabs
+    // Swap the active tab
     $('#type-switch div:nth-child(1)').toggleClass('active');
     $('#type-switch div:nth-child(2)').toggleClass('active');
     // Re-render results
     displayResults();
   };
+
+  // Handle global state changes
   $('#animated-switch').click(toggleAnimated);
   $('#type-switch').click(toggleType);
 
@@ -215,6 +237,7 @@ $(document).ready(function() {
     displayResults();
   });
 
+  // Init
   renderButtons();
   displayResults();
 });
