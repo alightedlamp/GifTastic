@@ -99,7 +99,7 @@ $(document).ready(function() {
           `);
         });
       })
-      .error(function(err) {
+      .fail(function(err) {
         $('#results').append(`
           <div>
             <p>There was an error in the application!</p>
