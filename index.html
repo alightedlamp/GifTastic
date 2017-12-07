@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>GifTastic</title>
+  <meta charset="UTF-8" />
+  <link rel="stylesheet" href="./css/styles.css" />
+  <link rel="stylesheet" href="./css/font-awesome.min.css" />
+</head>
+
+<body>
+  <section class="app">
+    <header>
+      <img class="logo" src="./img/logo.png" alt="Giphy logo" />
+      <h1>GifTastic</h1>
+    </header>
+    <div id="controls">
+      <form id="user-input-form">
+        <div class="form-group">
+          <label>
+            <input id="user-input" placeholder="Add tag" />
+          </label>
+        </div>
+        <button class="btn" type="submit">
+          <i class="fa fa-search" aria-hidden="true"></i>
+        </button>
+      </form>
+    </div>
+    <div id="buttons">
+    </div>
+    <section id="app-content">
+      <div id="results-container">
+        <div id="subheading"></div>
+        <div id="state-options">
+          <div class="state-option" id="type-switch">
+            <div class="active">GIFs</div>
+            <div>Stickers</div>
+          </div>
+          <div class="state-option" id="animated-switch">
+            <div>
+              <i class="fa fa-play" aria-hidden="true"></i>
+            </div>
+            <div class="active">
+              <i class="fa fa-pause" aria-hidden="true"></i>
+            </div>
+          </div>
+        </div>
+        <div id="results"></div>
+        <div class="pagination">
+          <button class="btn" id="previous" disabled>Previous</button>
+          <button class="btn" id="next">Next</button>
+        </div>
+      </div>
+    </section>
+  </section>
+  <script src="app.js"></script>
+</body>
+
+</html>
